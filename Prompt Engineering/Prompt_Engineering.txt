@@ -1,0 +1,356 @@
+import openai
+
+openai.api_key = "YOUR_API_KEY"
+
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0,
+    )
+    return response.choices[0].message["content"]
+
+########################################################################################################
+***************************************VERY VERY IMP***************************************
+Actual Python Code:
+-------------------
+import openai
+import os
+
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv()) # read local .env file
+
+openai.api_key  = os.getenv('OPENAI_API_KEY')
+
+def get_completion(prompt, model="gpt-3.5-turbo", temperature=0): 
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=temperature, 
+    )
+    return response.choices[0].message["content"]
+
+########################################################################################################
+
+
+An Example with Code - Contd
+----------------------------
+text_to_get_topics_1 = f"""The computer consists of a keyboard, mouse and a display. The rest of the accessories should be purchased separately."""
+
+We define a variable which will contain the string that is passed to the model along with the prompt.
+-----------------------------------------------------------------------------------------------------
+prompt = f"""
+Given a text delimited by triple quotes. check If it contains texts based on computer, output the topics in the following format:
+
+Topics - ...
+
+If the text does not contain toics based on computer, then simply write \"No Topics on Computer.\"
+
+\"\"\"{text_to_get_topics_1}\"\"\"
+"""
+
+We then define the prompt.
+----------------------------
+print(get_completion(prompt))
+
+Output:
+--------
+
+Topics - computer, keyboard, mouse, display, accessories
+
+
+From the above result we can see that based on a condition the model can give different kind of results.
+--------------------------------------------------------------------------------------------------------
+In this case the string has topics based on computer so it returns those topics.
+---------------------------------------------------------------------------------
+
+
+
+An Example with Code - Contd
+----------------------------
+
+text_to_get_topics_2 = f"""The movie is a well made piece of art with deep meaning on the subject of mental health."""
+prompt = f"""
+Given a text delimited by triple quotes. check If it contains texts based on computer, output the topics in the following format:
+
+Topics - ...
+
+If the text does not contain toics based on computer, then simply write \"No Topics on Computer.\"
+
+\"\"\"{text_to_get_topics_2}\"\"\"
+"""
+print(get_completion(prompt))
+
+
+Output:
+-------
+No Topics on Computer.
+
+
+In this case the string has no topics based on computer so the model returns No Topics
+--------------------------------------------------------------------------------------
+
+
+
+
+
+Iterative Prompt Development
+As is the case in any kind of programming language the first solution that you might think of might not be the best or the most effective solution and it almost always involves an iterative process of working through the solution to find the most effective one.
+
+The same applies for the Prompt Engineering.
+It is rare for the first prompt to work perfectly, but having a good process for refining the prompt is key.
+The process is similar to the iterative process of developing machine learning models.
+
+
+Code - Example
+Let's build an ad building assistant
+-------------------------------------
+fact_sheet_computer = """
+OVERVIEW
+- A computer targeted at gamers
+
+HARDWARE
+- Ryzen 5 processor
+- 16 GB RAM
+- Liquid cooling
+- 1 TB SSD
+
+SOFTWARE
+- Windows
+- Antivirus software
+- RGB controller
+
+ACCESSORIES
+- 4k Display
+- RGB keyboard and mouse
+"""
+
+In the above code we define a variable which contains the fact sheet for a computer
+-----------------------------------------------------------------------------------
+
+Code - Example Contd
+--------------------
+prompt = f"""
+You are an Ad Writer. Your task is to write a catchy ad based on the specifications
+provided in the technical factsheet . the information for technical specifications is delimited by triple backticks.
+
+Format everything as HTML that can be used in a website. 
+Place the description in a <div> element.
+
+Technical specifications: ```{fact_sheet_computer}```
+"""
+response = get_completion(prompt)
+print(response)
+
+In the above code we define the prompt and pass it to the function get_completion()
+-----------------------------------------------------------------------------------
+
+Code - Example Contd
+Code - Example Contd
+The code in the previous card generates this output of an Ad which is rendered in a HTML page.
+In order to get this kind of response from the model, the prompt we provide to the model must be continuously improved and it is not a one shot solution.
+
+
+
+Summarizing
+Summarizing is the process to summarize text, which can be useful for quickly glancing over a large volume of text.
+
+We can use Large Language Model to summarize for a given a large amount of text.
+
+An use case in which this type of process can be used:
+
+Let's say you have a large amount of reviews from thousands of users and it would be very tiring to have a look at every individual review and understand what they are trying to convey.
+
+It would be better to use a large language model to summarize each review to a specific number of words so that it'd be easier to go over them.
+You can also ask it to extract information from the text rather than summarize it, depending on how you wish to summarize it.
+
+
+Code - Example
+Let's try to summarize a product review
+---------------------------------------
+prod_review = """
+I recently purchased a 10-pack of Amazon Basics AA High-Performance Alkaline Batteries, and I'm very happy with them. They arrived quickly with free shipping for Prime members, and they've been working great in all of my devices. I've been using them in my remote controls, flashlights, and toys, and they've all been lasting a long time. I'm impressed with the quality of these batteries, and I would definitely recommend them to others. They're a great value for the price, and they're reliable and long-lasting. I'm glad I made the switch to Amazon Basics batteries.
+"""
+In the above code we define a variable which contains the review of a product
+------------------------------------------------------------------------------
+
+
+Code - Example Contd
+--------------------
+prompt = f"""
+Your task is to generate a short summary of a product review from an ecommerce site. 
+
+Summarize the review below, delimited by triple 
+backticks, in exactly 10 words. 
+
+Review: ```{prod_review}```
+"""
+response = get_completion(prompt)
+print(response)
+
+Here we define the prompt and pass it to the function get_completion() and get the following summarized output.
+---------------------------------------------------------------------------------------------------------------
+Output:
+-------
+Reliable, long-lasting batteries. Great value for the price.
+
+
+
+
+
+Inferring
+Large language models can also be used for inferring tasks such as
+
+Sentiment analysis
+Emotion recognition
+Information extraction
+Topic inference
+The use cases of Inferring can be
+
+Extract different types of information from a piece of text such as
+Identifying the sentiment of a product review
+Extracting the item and brand from a review
+Determining the topics covered in a news article.
+
+
+Traditional Development
+In the conventional machine learning workflow, you would need to gather the label data set, train the model, figure out how to deploy the model somewhere in the cloud, and then extract a sentiment, positive or negative, from a piece of text.
+
+And while that has some potential for success, going through the process is time-consuming.
+
+And for each of the tasks like
+
+Sentiment analysis
+Emotion recognition
+Information extraction
+the machine learning model must be trained individually which takes considerable effort for the developer.
+
+For many of these tasks, you can simply create a prompt and have it start producing results straight away, which is one of the really good things about a large language model.
+
+And that allows for incredibly quick application development.
+
+
+
+Code - Example
+--------------
+Let's try to identify the emotions from the previous review
+-----------------------------------------------------------
+prompt = f"""
+Identify a list of emotions that the writer of the following review is expressing. Include no more than five items in the list. Format your answer as a list of lower-case words separated by commas.
+
+Review text: '''{prod_review}'''
+"""
+response = get_completion(prompt)
+print(response)
+
+Output:
+--------
+happy, impressed, recommend, glad, satisfied
+
+
+
+
+Transforming
+Large language models can also be used in Transforming tasks, such as
+
+Translation
+Translating text from one language to one or many languages.
+The translated text can be either formal or informal way of speaking.
+Spelling and grammar correction
+Ask the model to proofread a text which you're not sure is grammatically correct and output the corrected text
+Format transformation
+Providing HTML and getting the equivalent JSON format.
+
+
+
+
+Code - Example
+--------------
+In this example we will translate a text given in English to Spanish
+--------------------------------------------------------------------
+translate_text = """
+The sun rises in the east.
+"""
+prompt = f"""
+Your task is to translate the given english text to spanish.
+
+Give the translation in the following format
+Spanish: ...
+
+Text: ```{translate_text}```
+"""
+response = get_completion(prompt)
+print(response)
+
+
+Output:
+-------
+Spanish: El sol sale por el este.
+
+
+
+Expanding
+Expanding is the task of taking a short piece of text and having the large language model generate a longer piece of text.
+
+An use case in which this type of process can be used:
+
+Generating personalized emails based on customer reviews.
+Note:
+
+It is important to use the capabilities of the language models responsibly and transparently.
+Such as acknowledging that a text was generated by AI as shown in the next card.
+
+
+
+Expanding - Example
+For the review:
+
+I am not satisfied with the product that was delivered to me, and it arrived way too late.
+The model can generate an email such as the one above.
+
+
+
+
+Code - Example
+--------------
+Let's try to build a story telling assistant
+--------------------------------------------
+sentiment = "funny"
+snippet = "A dog and cat are playing"
+prompt = f"""
+You are a story writer.
+Your task is to write a story based on a snippet that is provided.
+Given the snippet delimited by ```, The story can be funny or sad based on the sentiment provided. The story should be no more than 50 words.
+snippet: ```{snippet}```
+sentiment: {sentiment}
+"""
+response = get_completion(prompt)
+print(response)
+
+
+Output:
+--------------
+The dog and cat were playing a game of chase. The cat would dart around the room, and the dog would follow, wagging his tail excitedly. Suddenly, the cat stopped and turned to face the dog. "You know, you're not very good at this," she said with a smirk. The dog just looked at her, panting happily. "I know," he said. "But I'm having fun!"
+
+
+
+Chatbot
+A chatbot is a piece of software that attempts to mimic human conversation through text or voice interactions.
+
+Large language model can be used to build a custom chatbot, such as an AI customer service agent or an AI order taker for a restaurant.
+
+An Example of what a chatbot looks like
+
+User: tell me a joke
+
+Assistant: Why did the chicken cross the road
+
+User: I don't know
+
+Assistant: To get to the other side
+
+
+
+
